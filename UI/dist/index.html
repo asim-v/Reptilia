@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Reptilia</title>
+  <link rel="stylesheet" href="./style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div id="container">
+
+  <div id="content">
+    <div id="titleBar">
+      <h2><img src="logo-bright.png" style="max-height: 60px"></h2>
+<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
+
+<a href="#" class="toggle toggle--on" ></a> 
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script type="text/javascript">
+  $('.toggle').click(function(e) {
+  var toggle = this;
+  
+  e.preventDefault();
+  
+  $(toggle).toggleClass('toggle--on')
+         .toggleClass('toggle--off')
+         .addClass('toggle--moving');
+  
+  setTimeout(function() {
+    $(toggle).removeClass('toggle--moving');
+  }, 200)
+});
+</script>
+
+    </div>
+    
+    <div class="mainChart">
+      <canvas id="salesData"></canvas>
+      <!-- 
+      <h2>Total Sales</h2>
+
+      <div class="clearFix"></div>
+
+      <div id="totalSales">
+        <div class="col">
+          <div id="creditSales" class="progressBar"></div>
+          <h3>$36,059</h3>
+          <span class="progressTitle">Credit Sales</span>
+        </div>
+        <div class="col">
+          <div id="channelSales" class="progressBar"></div>
+          <h3>$24,834</h3>
+          <span class="progressTitle">Channel Sales</span>
+        </div>
+        <div class="col">
+          <div id="directSales" class="progressBar"></div>
+          <h3>$15,650</h3>
+          <span class="progressTitle">Direct Sales</span>
+        </div>
+      </div>
+
+      <table>
+        <tr>
+          <th>November Sales</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+
+        <tr>
+          <td>Dallas Oak Dining Chair</td>
+          <td>20</td>
+          <td>$1,342</td>
+        </tr>
+
+        <tr>
+          <td>Benmore Glass Coffee Table</td>
+          <td>18</td>
+          <td>$1,550</td>
+        </tr>
+
+        <tr>
+          <td>Aoraki Leather Sofa</td>
+          <td>15</td>
+          <td>$4,170</td>
+        </tr>
+
+        <tr>
+          <td>Bali Outdoor Wicker Chair</td>
+          <td>25</td>
+          <td>$2,974</td>
+        </tr>
+        -->
+        <ul class="menu">
+          <li>Categorias</li>
+          <li>Temperatura <span class="colorIcon red"></span></li>
+          <li>Humedad <span class="colorIcon orange"></span></li>
+          <li>Humedad de Suelo <span class="colorIcon green"></span></li>
+        </ul>        
+      </table>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.15.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.15.2/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+<script>
+// https://dribbble.com/shots/1821178-Sales-Report?list=buckets&offset=0
+const firebaseConfig = {
+  apiKey: "AIzaSyDXliQ8K96Tmx9Y-W-PBbgzfC8YZYAD-UQ",
+  authDomain: "reptilllia.firebaseapp.com",
+  databaseURL: "https://reptilllia.firebaseio.com",
+  projectId: "reptilllia",
+  storageBucket: "reptilllia.appspot.com",
+  messagingSenderId: "393675489729",
+  appId: "1:393675489729:web:c5f5b463465a3dde5c2f40",
+  measurementId: "G-JCLPP82814"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+firebase.analytics();
+  
+// Get a reference to the database service
+var hum = firebase.database().ref('humidity').val();    
+var temp = firebase.database().ref('temperature').val();     
+database.on('value', function(snapshot){
+    var changedUser = snapshot.val();
+var salesData = {
+  labels: ["", ""],
+  datasets: [
+    {
+      label: "Temperatura",
+      fillColor: "rgba(195, 40, 96, 0.1)",
+      strokeColor: "rgba(195, 40, 96, 1)",
+      pointColor: "rgba(195, 40, 96, 1)",
+      pointStrokeColor: "#202b33",
+      pointHighlightStroke: "rgba(225,225,225,0.9)",
+      data: [temp,temp]
+    },
+    {
+      label: "Humedad",
+      fillColor: "rgba(255, 172, 100, 0.1)",
+      strokeColor: "rgba(255, 172, 100, 1)",
+      pointColor: "rgba(255, 172, 100, 1)",
+      pointStrokeColor: "#202b33",
+      pointHighlightStroke: "rgba(225,225,225,0.9)",
+      data: [temp,temp]
+    },
+    {
+      label: "Humedad de Suelo",
+      fillColor: "rgba(19, 71, 34, 0.3)",
+      strokeColor: "rgba(88, 188, 116, 1)",
+      pointColor: "rgba(88, 188, 116, 1)",
+      pointStrokeColor: "#202b33",
+      pointHighlightStroke: "rgba(225,225,225,0.9)",
+      data: [hum,hum]
+    }
+  ]
+};
+var ctx = document.getElementById("salesData").getContext("2d");
+window.myLineChart = new Chart(ctx).Line(salesData, {
+  pointDotRadius : 6,
+  pointDotStrokeWidth : 2,
+  datasetStrokeWidth : 3,
+  scaleShowVerticalLines: false,
+  scaleGridLineWidth : 2,
+  scaleShowGridLines : true,
+  scaleGridLineColor : "rgba(225, 255, 255, 0.02)",
+  scaleOverride: true,
+  scaleSteps: 9,
+  scaleStepWidth: 500,
+  scaleStartValue: 0,
+
+  responsive: true
+
+});
+
+    document.getElementById("Counter").innerHTML = changedUser + "  Posts Analizados";
+});
+    
+</script>
+    
+
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js'></script>
+<script src='https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.7.4/dist/progressbar.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
